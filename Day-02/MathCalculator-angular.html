@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Math Calculator</title>
+    <style>
+    .result{
+        color: red;
+        font-size: 29pt;
+    }
+    </style>
+    <script src="jquery-1.11.3.js"></script>
+    <script src="angular.min.js"></script>
+    <script>
+     String.prototype.toInt = function(){
+        return parseInt(this,10);
+    };
+    //Model
+    function Calculator(){
+        this.number1 = "0";
+        this.number2 = "0";
+        this.result = "0";
+    }
+    Calculator.prototype.add = function(){
+        this.result = this.number1.toInt() + this.number2.toInt();  
+    };
+    Calculator.prototype.subtract = function(){
+        this.result = this.number1.toInt() - this.number2.toInt();  
+    };
+    Calculator.prototype.multiply = function(){
+        this.result = this.number1.toInt() * this.number2.toInt();  
+    };
+    Calculator.prototype.divide = function(){
+        this.result = this.number1.toInt() / this.number2.toInt();  
+    };
+        
+     /*$(function(){
+        angular.bootstrap(document.body,[]);
+        window.scope = angular.element(document.body).scope();
+        
+        scope.calculator = window.calculator = new Calculator();
+        scope.$apply();
+    });*/
+    angular
+        .module('calculatorApp',[])
+        .run(function($rootScope){
+            $rootScope.calculator = new Calculator();
+        });
+    </script>
+</head>
+<body ng-app="calculatorApp">
+    <input type="text" name="" id="txtNumber1" ng-model="calculator.number1">
+    <input type="text" name="" id="txtNumber2" ng-model="calculator.number2">
+    <br>
+    <input type="button" value="Add" ng-click="calculator.add()">
+    <input type="button" value="Subtract" ng-click="calculator.subtract()">
+    <input type="button" value="Multiply" ng-click="calculator.multiply()">
+    <input type="button" value="Divide" ng-click="calculator.divide()">
+    <div class="result" ng-bind="calculator.result"></div>
+    
+    <br>
+    
+</body>
+</html>

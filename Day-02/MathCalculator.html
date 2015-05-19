@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Math Calculator</title>
+    <style>
+    .result{
+        color: red;
+        font-size: 29pt;
+    }
+    </style>
+    <script src="jquery-1.11.3.js"></script>
+    <script src="angular.min.js"></script>
+    <script>
+     String.prototype.toInt = function(){
+        return parseInt(this,10);
+    };
+    //Model
+    function Calculator(){
+        this.number1 = "0";
+        this.number2 = "0";
+        this.result = "0";
+    }
+    Calculator.prototype.add = function(){
+        this.result = this.number1.toInt() + this.number2.toInt();  
+    };
+    Calculator.prototype.subtract = function(){
+        this.result = this.number1.toInt() - this.number2.toInt();  
+    };
+    Calculator.prototype.multiply = function(){
+        this.result = this.number1.toInt() * this.number2.toInt();  
+    };
+    Calculator.prototype.divide = function(){
+        this.result = this.number1.toInt() / this.number2.toInt();  
+    };
+        
+     $(function(){
+        angular.bootstrap(document.body,[]);
+        window.scope = angular.element(document.body).scope();
+        
+        scope.calculator = window.calculator = new Calculator();
+        
+        
+        $("input[app-model]").each(function(index, element){
+            var $element = $(element);
+            var model = $element.attr("app-model");
+             scope.$watch(model, function(newValue, oldValue){
+                $element.val(scope.$eval(model));
+             });
+            $element.change(function(){
+                scope.$apply(function(){
+                    var expr = model + " = '" + this.value + "'";
+                    scope.$eval(expr);
+                }.bind(element));
+            });
+        });
+        
+        $("*[app-bind]").each(function(index, element){
+            var $element = $(element);
+            var model = $element.attr("app-bind");
+            scope.$watch(model, function(){
+                $element.html(scope.$eval(model));
+            });
+        });
+        
+       $("*[app-click]").each(function(index, element){
+           var $element = $(element);
+           var expr= $element.attr("app-click");
+           $element.click(function(){
+               scope.$apply(function(){
+                scope.$eval(expr);
+               });
+           });
+       });
+    });
+    </script>
+</head>
+<body>
+    <input type="text" name="" id="txtNumber1" app-model="calculator.number1">
+    <input type="text" name="" id="txtNumber2" app-model="calculator.number2">
+    <br>
+    <input type="button" value="Add" app-click="calculator.add()">
+    <input type="button" value="Subtract" app-click="calculator.subtract()">
+    <input type="button" value="Multiply" app-click="calculator.multiply()">
+    <input type="button" value="Divide" app-click="calculator.divide()">
+    <div class="result" app-bind="calculator.result"></div>
+</body>
+</html>

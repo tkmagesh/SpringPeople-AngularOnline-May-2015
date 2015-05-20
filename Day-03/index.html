@@ -2,11 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <style>
+        .closed {
+            color : red;
+            text-decoration: line-through;
+            font-weight: bold;
+            font-style: italic;
+        }
+        li{
+            cursor: pointer;
+        }
+    </style>
     <title>Bug Tracker</title>
     <!-- Use Cases
         1. Display a list of bugs - done
         2. Add a new bug - done
-        3. Toggle the 'closed' status of the bug
+        3. Toggle the 'closed' status of the bug - done
         4. Remove closed bugs
         5. Display stats ( closed # / total # )
         6. Search the bugs
@@ -23,14 +34,29 @@
         var bugTracker = angular.module("bugTracker", []);
         bugTracker.controller("bugsController", function($scope){
             $scope.bugs = [
-                "Voice recording is of poor quality",
-                "Server communication fails frequently",
-                "Indeterministic behavior when autheticating users"
+                 { title : "Voice recording is of poor quality", isClosed : false},
+                 { title : "Server communication fails frequently", isClosed : true},
+                 { title : "Indeterministic behavior when autheticating users", isClosed : false}
             ];
             $scope.addBug = function(newBugTitle){
-                $scope.bugs.push(newBugTitle);
+                var newBug = {
+                    title : newBugTitle,
+                    isClosed : false
+                };
+                $scope.bugs.push(newBug);
                 $scope.newBug = '';
             };
+            $scope.toggleBug = function(bug){
+                bug.isClosed = !bug.isClosed;
+            };
+            $scope.removeClosed = function(){
+                for(var i=$scope.bugs.length-1; i>=0; i--){
+                    var bug = $scope.bugs[i];
+                    if (bug.isClosed)
+                        $scope.bugs.splice(i,1);
+                }
+            };
+
         });
     </script>
 
@@ -48,9 +74,9 @@
             <label for="">Bug :</label>
             <input type="text" ng-model="newBug">
             <input type="button" value="Add Bug" ng-click="addBug(newBug)">
-            <input type="button" value="Remove Closed">
+            <input type="button" value="Remove Closed" ng-click="removeClosed()">
             <ol>
-                <li ng-repeat="bug in bugs">{{bug}}</li>
+                <li ng-repeat="bug in bugs" ng-class="{closed : bug.isClosed}" ng-click="toggleBug(bug)">{{bug}}</li>
             </ol>
         </div>
     </div>

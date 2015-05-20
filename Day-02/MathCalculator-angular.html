@@ -41,11 +41,12 @@
         scope.calculator = window.calculator = new Calculator();
         scope.$apply();
     });*/
-    angular
-        .module('calculatorApp',[])
-        .run(function($rootScope){
-            $rootScope.calculator = new Calculator();
-        });
+
+    var calculatorApp = angular.module('calculatorApp',[]);
+    calculatorApp.run(function($rootScope, $http, $compile){
+        console.log(arguments.length);
+        //$rootScope.calculator = new Calculator();
+    });
     </script>
 </head>
 <body ng-app="calculatorApp">

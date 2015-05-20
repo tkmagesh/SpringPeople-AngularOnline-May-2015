@@ -1,0 +1,15 @@
+1. Scope 
+
+2. Module (DI Container)
+
+3. Controller (UI Interaction logic , express you need a new scope object)
+4. Directive
+5. Filter (Transform the data for presentationx purposes)
+
+6. Factory
+7. Service
+8. Value
+
+9. Provider
+10. Constant
+

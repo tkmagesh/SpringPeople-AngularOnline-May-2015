@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bug Tracker</title>
+    <!-- Use Cases
+        1. Display a list of bugs - done
+        2. Add a new bug - done
+        3. Toggle the 'closed' status of the bug
+        4. Remove closed bugs
+        5. Display stats ( closed # / total # )
+        6. Search the bugs
+        7. Sort the bugs
+        8. Limit the size of the bug text displayed
+        9. Persist the bugs in the storage (localStorage);
+        10. Display when the bugs where created
+        11. Persist the bugs in the server
+
+        12. Create and manage projects
+    -->
+    <script src="angular.min.js"></script>
+    <script>
+        var bugTracker = angular.module("bugTracker", []);
+        bugTracker.controller("bugsController", function($scope){
+            $scope.bugs = [
+                "Voice recording is of poor quality",
+                "Server communication fails frequently",
+                "Indeterministic behavior when autheticating users"
+            ];
+            $scope.addBug = function(newBugTitle){
+                $scope.bugs.push(newBugTitle);
+                $scope.newBug = '';
+            };
+        });
+    </script>
+
+</head>
+<body ng-app="bugTracker">
+    <h1>Bug Tracker</h1>
+    <div class="content" ng-controller="bugsController">
+        <div class="stats">
+            <span class="closed"></span>
+            <span class="delimit">/</span>
+            <span>{{bugs.length}}</span>
+        </div>
+        <div class="search"></div>
+        <div class="bugsList">
+            <label for="">Bug :</label>
+            <input type="text" ng-model="newBug">
+            <input type="button" value="Add Bug" ng-click="addBug(newBug)">
+            <input type="button" value="Remove Closed">
+            <ol>
+                <li ng-repeat="bug in bugs">{{bug}}</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

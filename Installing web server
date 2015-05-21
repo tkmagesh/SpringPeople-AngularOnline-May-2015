@@ -1,0 +1,7 @@
+install node.js from http://nodejs.org
+
+sudo npm install http-server -g
+
+Go to the folder where the web resources are and execute the following command in the shell
+
+http-server -c -1

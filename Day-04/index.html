@@ -51,36 +51,103 @@
     -->
     <script src="angular.min.js"></script>
     <script>
+        function Bug(defaults){
+            defaults = defaults || {};
+            this.id = defaults.id || 0;
+            this.title = defaults.title || '';
+            this.isClosed = defaults.isClosed || false;
+            this.createdAt = defaults.createdAt || new Date();
+        }
+        Bug.prototype.toggle = function(){
+            this.isClosed = !this.isClosed;
+        }
+
+        function BugStorage(){
+            var currentBugId = 0;
+            var storage = window.localStorage;
+
+            this.getAll = function getAllBugsFromStorage(){
+                var result = [];
+                for(var i=0; i<storage.length; i++){
+                    var key = storage.key(i);
+                    var data = storage.getItem(key);
+                    var dataAsObject = angular.fromJson(data);
+                    var bug = new Bug(dataAsObject);
+                    if (currentBugId < bug.id) currentBugId = bug.id;
+                    result.push(bug);
+                }
+                return result;
+            }
+            this.save = function saveBugToStorage(bug){
+                if (!bug.id)
+                    bug.id = ++currentBugId;
+                storage.setItem(bug.id, angular.toJson(bug));
+                return bug;
+            }
+            this.remove = function removeBugFromStorage(bug){
+                storage.removeItem(bug.id);
+            }
+        }
+        /*var bugStorage = (function(){
+            var currentBugId = 0;
+            var storage = window.localStorage;
+
+            function getAllBugsFromStorage(){
+                var result = [];
+                for(var i=0; i<storage.length; i++){
+                    var key = storage.key(i);
+                    var data = storage.getItem(key);
+                    var dataAsObject = angular.fromJson(data);
+                    var bug = new Bug(dataAsObject);
+                    if (currentBugId < bug.id) currentBugId = bug.id;
+                    result.push(bug);
+                }
+                return result;
+            }
+            function saveBugToStorage(bug){
+                if (!bug.id)
+                    bug.id = ++currentBugId;
+                storage.setItem(bug.id, angular.toJson(bug));
+                return bug;
+            }
+            function removeBugFromStorage(bug){
+                storage.removeItem(bug.id);
+            }
+            return {
+                getAll : getAllBugsFromStorage,
+                save : saveBugToStorage,
+                remove : removeBugFromStorage
+            }
+        })();*/
+        var bugStorage = new BugStorage();
+
         var bugTracker = angular.module("bugTracker", []);
         bugTracker.controller("bugsController", function($scope){
-            $scope.bugs = [
-                 { title : "Voice recording is of poor quality", isClosed : false},
-                 { title : "Server communication fails frequently", isClosed : true},
-                 { title : "Indeterministic behavior when autheticating users", isClosed : false}
-            ];
+            $scope.bugs = bugStorage.getAll();
+
             $scope.addBug = function(newBugTitle){
-                var newBug = {
+                var newBug = bugStorage.save(new Bug({
                     title : newBugTitle,
                     isClosed : false
-                };
+                }));
+
                 $scope.bugs.push(newBug);
                 $scope.newBug = '';
             };
             $scope.toggleBug = function(bug){
-                bug.isClosed = !bug.isClosed;
+                bug.toggle();
+                bugStorage.save(bug);
             };
             $scope.removeClosed = function(){
                 for(var i=$scope.bugs.length-1; i>=0; i--){
                     var bug = $scope.bugs[i];
-                    if (bug.isClosed)
+                    if (bug.isClosed){
+                        bugStorage.remove(bug);
                         $scope.bugs.splice(i,1);
+                    }
                 }
             };
-            /*$scope.getClosedCount = function(){
-                return $scope.bugs.filter(function(bug){
-                    return bug.isClosed
-                }).length;
-            };*/
+
 
 
         });

@@ -54,12 +54,38 @@
             }
         });
 
-        bugTracker.controller("bugsController", function($scope, bugStorage, Bug, $http){
-            var promise = $http.get("http://localhost:8000/bugs");
-            promise.then(function(response){
-                $scope.bugs = response.data.map(function(bugData){ return new Bug(bugData);})
+        bugTracker.service("bugService", function($http, Bug){
+            this.getAll = function(){
+                return $http
+                    .get("http://localhost:8000/bugs")
+                    .then(function(response){
+                        return response.data.map(function(bugData){
+                            return new Bug(bugData);
+                        });
+                    });
+            };
+            this.add = function(bugData){
+                return $http.post("http://localhost:8000/bugs", bugData)
+                    .then(function(response){
+                        return new Bug(response.data);
+                    });
+            };
+            this.save = function(bug){
+                return $http.put("http://localhost:8000/bugs/" + bug.id, bug)
+                    .then(function(response){
+                        return new Bug(response.data);
+                    });
+            };
+            this.delete = function(bug){
+                return $http.delete("http://localhost:8000/bugs/" + bug.id);
+            };
+        });
+
+        bugTracker.controller("bugsController", function($scope, bugStorage, Bug, $http, bugService){
+
+            bugService.getAll().then(function(bugs){
+                $scope.bugs = bugs;
             });
-            //$scope.bugs = bugStorage.getAll();
 
             $scope.addBug = function(newBugTitle){
                 var newBug = {
@@ -67,25 +93,21 @@
                     isClosed : false,
                     createdAt : new Date()
                 };
-                var promise = $http.post("http://localhost:8000/bugs", newBug);
-                promise.then(function(response){
-                    var bug = new Bug(response.data);
-                    $scope.bugs.push(bug);
-                    $scope.newBug = '';
-                });
+                bugService.add(newBug)
+                    .then(function(bug){
+                        $scope.bugs.push(bug);
+                    });
             };
             $scope.toggleBug = function(bug){
                 bug.toggle();
-                //bugStorage.save(bug);
-                $http.put("http://localhost:8000/bugs/" + bug.id, bug);
+                bugService.save(bug);
             };
             $scope.removeClosed = function(){
                 for(var i=$scope.bugs.length-1; i>=0; i--){
                     var bug = $scope.bugs[i];
                     if (bug.isClosed){
-                        $http.delete("http://localhost:8000/bugs/" + bug.id).then(function(){
-                            $scope.bugs.splice(i,1);
-                        });
+                        bugService.delete(bug);
+                        $scope.bugs.splice(i,1);
                     }
                 }
             };

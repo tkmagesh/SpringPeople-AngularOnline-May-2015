@@ -1,16 +1,22 @@
 {
   "bugs": [
     {
-      "id": 3,
-      "title": "Application shuts down frequently",
+      "title": "Bug - 2",
       "isClosed": false,
-      "createdAt": "2015-05-18T10:41:58.994Z"
+      "createdAt": "2015-05-22T15:44:44.577Z",
+      "id": 6
     },
     {
-      "title": "Too many network failures during power cut",
+      "title": "Bug - 3",
       "isClosed": false,
-      "createdAt": "2015-05-18T10:41:57.424Z",
-      "id": 4
+      "createdAt": "2015-05-22T15:44:49.358Z",
+      "id": 7
+    },
+    {
+      "title": "Bug - 4",
+      "isClosed": false,
+      "createdAt": "2015-05-22T15:50:13.970Z",
+      "id": 8
     }
   ],
   "employees": []

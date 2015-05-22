@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Router Demo</title>
+    <script src="angular.min.js"></script>
+    <script src="angular-route.js"></script>
+    <script>
+    angular
+        .module("routingApp", ["ngRoute"])
+        .config(function($routeProvider){
+            $routeProvider
+                .when("/products", {
+                    //template : ""
+                    templateUrl : "templates/ProductsTemplate.html",
+                    controller : "productsController"
+                })
+                .when("/customers", {
+                    //template : "<h2>Customers</h2>"
+                    templateUrl : "templates/customersTemplate.html"
+                })
+                .otherwise({
+                    redirectTo : "/products"
+                });
+        })
+        .service("productsService", function(){
+            this.getAll = function(){
+                return [
+                    {id : 3, name : "Pen", description : "A writing device for the notebook", units : 30, cost: 70},
+                    {id : 7, name : "Pencil", description : "A cheap writing device for the notebook", units : 70, cost: 40},
+                    {id : 9, name : "Marker", description : "A fancy writing device for the whiteboard", units : 90, cost: 60},
+                    {id : 5, name : "Mouse", description : "A pointing device for the PC", units : 50, cost: 20},
+                ];
+            }
+        })
+        .controller("productsController", function($scope, productsService){
+            $scope.products = productsService.getAll();
+    });
+    </script>
+</head>
+<body ng-app="routingApp">
+    <h1>My App</h1>
+    <a href="#/products">Products</a> &nbsp; &nbsp; <a href="#/customers">Customers</a>
+    <hr>
+    <ng-view></ng-view>
+</body>
+</html>

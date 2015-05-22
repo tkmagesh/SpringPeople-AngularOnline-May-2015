@@ -1,0 +1,35 @@
+          ol{
+             width: 60%
+         }
+         li{
+             list-style: none;
+             border : 2px solid gray;
+             background: -webkit-linear-gradient(top, white 0%, lightgray 100%);
+             padding : 5px;
+             margin-bottom: 5px;
+             border-radius: 10px;
+         }
+         li.closed{
+             border-color : red;
+             background: -webkit-linear-gradient(top, white 0%, lightpink 100%);
+
+         }
+         .bugTitle{
+             font-size: 19pt;
+         }
+         .timeStamp {
+             font-style: italic;
+             font-size: small;
+         }
+         .stats{
+             font-size: 18pt;
+         }
+         div {
+             margin-bottom: 10px;
+         }
+         li.closed div.bugTitle{
+             color : red;
+             font-style: italic;
+             text-decoration: line-through;
+             font-weight: bold;
+         }

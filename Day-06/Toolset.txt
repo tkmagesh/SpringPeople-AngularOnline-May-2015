@@ -1,0 +1,24 @@
+Node.js
+
+Bower.js
+========
+A package management solution for client-side dependencies
+
+npm install -g bower
+
+Unit Testing
+
+Jasmine
+Mocha
+
+Organize test code
+Assertion API - chai.js
+Spy or Mock - sinon.js
+
+Karma.js - Test runner that can be configured to execute the tests across different browsers
+
+E2E
+Selenium WebDriver
+Protractor - Wrapper API on Selenium WebDriver
+
+angular-seed
